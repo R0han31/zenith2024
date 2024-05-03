@@ -48,9 +48,14 @@ def get_items():
 
 def update_bills(time_interval):
     global current_bill
+    print("starting camera...")
     start_camera()
+    print("starting camera done")
     while True:
+        print("inside inf loop")
+        print("before time sleep", time_interval)
         time.sleep(time_interval)
+        print("after time sleep", time_interval)
         img_path = capture_frame()
         results = model.predict(img_path)
         result = results[0]

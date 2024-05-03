@@ -73,19 +73,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Your custom JavaScript -->
     <script>
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
+        function get_items(){
 
-        $.ajaxSetup (
-            {
-                async: false
-            }
-        )
+            $.ajaxSetup (
+                {
+                    async: false
+                }
+            )
 
-        while (true){
-            sleep(5000);
-            
+
             $.ajax(
                 {
                     url: "{{ url_for('get_items') }}",
@@ -96,8 +92,10 @@
 
                 }
             )
-
         }
+
+        setInterval(get_items, 3000);
+
         // Handle delete button click
         $('.deleteBtn').click(function() {
             var itemId = $(this).data('id');
