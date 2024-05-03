@@ -41,7 +41,10 @@ def start_camera():
                 picam.close()
         except Exception as e:
                 print(e)
-        picam.start()
+        try:
+                picam.start()
+        except Exception as e:
+                print(e)
 
 def stop_camera():
         picam.close()
