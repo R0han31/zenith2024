@@ -1,8 +1,8 @@
-from flask import Flask, request, render_template, redirect, jsonify
 import threading
 import time
 from rbp_camera import *
 from ultralytics import YOLO
+from flask import Flask, request, render_template, redirect, jsonify
 
 app = Flask(__name__)
 model = YOLO('/home/rohan/Desktop/zenith2024/models/Final.pt')

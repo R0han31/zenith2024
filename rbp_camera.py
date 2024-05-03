@@ -1,6 +1,7 @@
 import time, libcamera
 from picamera2 import Picamera2, Preview
 import os
+
 picam = Picamera2()
 
 config = picam.create_preview_configuration(main={"size":(1600,1200)})
