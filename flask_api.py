@@ -56,8 +56,13 @@ def update_bills(time_interval):
         print("before time sleep", time_interval)
         time.sleep(time_interval)
         print("after time sleep", time_interval)
+        print('capturing frame...')
         img_path = capture_frame()
+        print(img_path)
+        print('captured frame...')
+        print('before predict...')
         results = model.predict(img_path)
+        print('after predict...')
         result = results[0]
         names = result.names
         
