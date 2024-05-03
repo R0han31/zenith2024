@@ -73,6 +73,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Your custom JavaScript -->
     <script>
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         $.ajaxSetup (
             {
                 async: false
@@ -80,6 +84,8 @@
         )
 
         while (true){
+            sleep(5000);
+            
             $.ajax(
                 {
                     url: "{{ url_for('get_items') }}",
