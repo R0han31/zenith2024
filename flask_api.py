@@ -50,6 +50,7 @@ def update_bills(time_interval):
     camera.start_camera()
     global current_bill
     while True:
+        time.sleep(time_interval)
         img_path = camera.capture_frame()
         print(img_path)
         results = model.predict(img_path)
@@ -59,9 +60,14 @@ def update_bills(time_interval):
 			
         for i in range(len(result.boxes)):
             box = result.boxes[i]
+            object_name = names[box.cls[0].item()]
             print('Object: ', names[box.cls[0].item()])
         
-            current_bill = {1: names[box.cls[0].item()]}
+            if object_name in current_bill:
+                current_bill[object_name][1] += 1
+                current_bill[object_name][2] = (current_bill[object_name][0] * current_bill[object_name][1])
+            else:
+                current_bill[object_name] = [item_price_map[object_name], 1, item_price_map[object_name]]
         
 if __name__ == "__main__":  
     app.run(debug=True)
