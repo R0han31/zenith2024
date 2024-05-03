@@ -37,7 +37,7 @@
                         <td>{{details.1}}</td>
                         <td>{{details.2}}</td>
                         <td>
-                            <button class="btn btn-danger deleteBtn" data-id="forloop.counter">Delete</button>
+                            <button class="btn btn-danger deleteBtn" data-id="{{item}}" data-toggle="modal" data-target="#deleteModal">Delete</button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -73,7 +73,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Your custom JavaScript -->
     <script>
-
         function updateTable(data) {
             // Clear existing table content
             $('#billItems').empty();
@@ -85,49 +84,88 @@
                 row.append($('<td>').text(details[0]));
                 row.append($('<td>').text(details[1]));
                 row.append($('<td>').text(details[2]));
-                row.append($('<td>').html('<button class="btn btn-danger deleteBtn" data-id="' + itemName + '">Delete</button>'));
+                row.append($('<td>').html('<button class="btn btn-danger deleteBtn" data-id="' + itemName + '" data-toggle="modal" data-target="#deleteModal">Delete</button>'));
                 $('#billItems').append(row);
             });
         }
-
+    
         function get_items(){
-
-            $.ajaxSetup (
+            $.ajaxSetup(
                 {
                     async: false
                 }
-            )
+            );
 
+            $.ajax({
+                url: "{{ url_for('get_items') }}",
+                type: "GET",
+                success: function(data){
+                    updateTable(data);
+                },
+            });
+        }
+    
+        var fetch_items = setInterval(get_items, 5000);
 
-            $.ajax(
-                {
-                    url: "{{ url_for('get_items') }}",
-                    type: "GET",
-                    success: function(data){
-                        console.log(data);
-                        updateTable(data);
-                    },
-
-                }
-            )
+        function stopFetchItems(){
+            clearInterval(fetch_items);
         }
 
-        setInterval(get_items, 3000);
-
-        // Handle delete button click
-        $('.deleteBtn').click(function() {
+        function startFetchItems(){
+            fetch_items = setInterval(get_items, 5000);
+        }
+    
+        $(document).on('click', '.deleteBtn', function() {
             var itemId = $(this).data('id');
             $('#deleteModal').modal('show');
+            
+            // Clear previous submit event handler
+            $('#deleteForm').off('submit');
+        
+            // Submit delete form
             $('#deleteForm').submit(function(e) {
                 e.preventDefault();
                 var securityCode = $('#securityCode').val();
-                // Perform POST request to delete item
-                console.log('Deleting item with ID:', itemId, 'Security Code:', securityCode);
-                // After deletion, update bill items on the page
-                // This is just a placeholder for the actual logic
+                
+                // Perform AJAX request to delete item
+                stopFetchItems();
+                $.ajaxSetup({
+                    async: false
+                });
+        
+        
+                $.ajax({
+                    url: "{{ url_for('delete_item') }}",
+                    type: "POST",
+                    data: { 
+                        item: itemId,
+                        security_code: securityCode,
+                    },
+                    success: function(response) {
+                        document.getElementById("securityCode").value = "";
+                        if (response == "Incorrect Code!") {
+                            $('#deleteModal').modal('hide');
+                            alert(response);
+                            startFetchItems();
+                        } else {
+                            // Close modal
+                            $('#deleteModal').modal('hide');
+                            alert('Item deleted: ' + itemId);
+                            // Update table
+                            updateTable(response);
+                            startFetchItems();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error deleting item:', error);
+                        startFetchItems();
+                        // Handle error
+                    }
+                });
             });
         });
-
+        
+    
         // Handle end billing button click
         document.getElementById('endBillingBtn').addEventListener('click', function() {
             // Perform end billing actions
@@ -135,6 +173,7 @@
             console.log('End Billing button clicked');
         });
     </script>
+    
 </body>
 
 </html>
