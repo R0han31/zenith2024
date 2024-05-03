@@ -1,12 +1,16 @@
-import time, libcamera
-from picamera2 import Picamera2, Preview
+import time
 import os
+try:
+        import libcamera
+        from picamera2 import Picamera2, Preview
+        picam = Picamera2()
 
-picam = Picamera2()
+        config = picam.create_preview_configuration(main={"size":(1600,1200)})
+        config["transform"] = libcamera.Transform(hflip=1,vflip=1)
+        picam.configure(config)
+except RuntimeError:
+        pass
 
-config = picam.create_preview_configuration(main={"size":(1600,1200)})
-config["transform"] = libcamera.Transform(hflip=1,vflip=1)
-picam.configure(config)
 
 # picam.start_preview(Preview.QTGL)
 
