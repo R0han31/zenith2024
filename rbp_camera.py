@@ -32,8 +32,8 @@ except RuntimeError:
 #picam.capture_file("ifsk.jpg")
 
 def capture_frame(path="/home/rohan/Desktop/zenith2024/captures/", fname="capture.jpg"):
-        picam.close()
-        picam.start()
+        # picam.close()
+        # picam.start()
         filename = os.path.join(path, fname)
         picam.capture_file(filename)
         return filename
