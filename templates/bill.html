@@ -73,6 +73,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Your custom JavaScript -->
     <script>
+
+        function updateTable(data) {
+            // Clear existing table content
+            $('#billItems').empty();
+            
+            // Populate table with new data
+            $.each(data, function(itemName, details) {
+                var row = $('<tr>');
+                row.append($('<td>').text(itemName));
+                row.append($('<td>').text(details[0]));
+                row.append($('<td>').text(details[1]));
+                row.append($('<td>').text(details[2]));
+                row.append($('<td>').html('<button class="btn btn-danger deleteBtn" data-id="' + itemName + '">Delete</button>'));
+                $('#billItems').append(row);
+            });
+        }
+
         function get_items(){
 
             $.ajaxSetup (
@@ -88,6 +105,7 @@
                     type: "GET",
                     success: function(data){
                         console.log(data);
+                        updateTable(data);
                     },
 
                 }
