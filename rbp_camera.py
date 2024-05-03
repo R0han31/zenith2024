@@ -15,6 +15,9 @@ try:
 
 except RuntimeError:
         pass
+except ImportError:
+        import libcamera
+        from picamera2 import Picamera2, Preview
 
 
 # picam.start_preview(Preview.QTGL)
