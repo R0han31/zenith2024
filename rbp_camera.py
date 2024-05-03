@@ -1,18 +1,27 @@
 import time
 import os
 try:
+        print("before import libcamera")
         import libcamera
+        print("after import libcamera")
+        print("before import picamera")
         from picamera2 import Picamera2, Preview
+        print("after import picamera")
 except RuntimeError:
         pass
 
 try:
+        print("before init picam")
         picam = Picamera2()
+        print("after init picam")
+
+        print("before config picam")
 
         config = picam.create_preview_configuration(main={"size":(1600,1200)})
         config["transform"] = libcamera.Transform(hflip=1,vflip=1)
         picam.configure(config)
-
+        print("after config picam")
+        
 except RuntimeError:
         pass
 except ImportError:
