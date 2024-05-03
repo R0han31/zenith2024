@@ -1,6 +1,5 @@
 import threading
 import time
-from rbp_camera import *
 from ultralytics import YOLO
 from flask import Flask, request, render_template, redirect, jsonify
 
@@ -47,6 +46,7 @@ def get_items():
     return jsonify(current_bill)
 
 def update_bills(time_interval):
+    from rbp_camera import capture_frame, start_camera, stop_camera
     global current_bill
     print("starting camera...")
     start_camera()
