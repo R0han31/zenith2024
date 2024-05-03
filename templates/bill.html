@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC Billing Systems</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">ABC Billing Systems</h1>
+        <div id="customerInfo" class="mb-8">
+            <!-- Sample customer information -->
+            <p><strong>Name: </strong>{{email}}</p>
+            <p><strong>Phone: </strong>{{phone}}</p>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>MRP</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="billItems">
+                {% for item, details in bill.items() %}
+                    <tr>
+                        <td>{{item}}</td>
+                        <td>{{details.0}}</td>
+                        <td>{{details.1}}</td>
+                        <td>{{details.2}}</td>
+                        <td>
+                            <button class="btn btn-danger deleteBtn" data-id="forloop.counter">Delete</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button id="endBillingBtn" class="btn btn-primary w-full mt-8">End Billing</button>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="deleteForm">
+                        <div class="mb-3">
+                            <label for="securityCode" class="form-label">Security Code:</label>
+                            <input type="password" class="form-control" id="securityCode" required>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Your custom JavaScript -->
+    <script>
+        $.(ajaxSetup) {
+            async: false
+        }
+
+        while (true){
+            $.ajax(
+                {
+                    url: "{{ url_for('get_items') }}",
+                    type: "GET",
+                    success: function(data){
+                        console.log(data);
+                    },
+
+                }
+            )
+
+        }
+        // Handle delete button click
+        $('.deleteBtn').click(function() {
+            var itemId = $(this).data('id');
+            $('#deleteModal').modal('show');
+            $('#deleteForm').submit(function(e) {
+                e.preventDefault();
+                var securityCode = $('#securityCode').val();
+                // Perform POST request to delete item
+                console.log('Deleting item with ID:', itemId, 'Security Code:', securityCode);
+                // After deletion, update bill items on the page
+                // This is just a placeholder for the actual logic
+            });
+        });
+
+        // Handle end billing button click
+        document.getElementById('endBillingBtn').addEventListener('click', function() {
+            // Perform end billing actions
+            // You can add your logic here
+            console.log('End Billing button clicked');
+        });
+    </script>
+</body>
+
+</html>
