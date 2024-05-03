@@ -39,7 +39,7 @@ def home():
 @app.route("/billing", methods=["GET", "POST"])
 def billing():
     t1 = threading.Thread(target=update_bills, args=(10,))
-    t1.start()
+    # t1.start()
     return render_template("bill.html", bill=current_bill, email=user.get("email"), phone=user.get("phone"))
 
 @app.route("/get_items", methods=["GET"])
