@@ -1,7 +1,8 @@
+from flask import Flask, request, render_template, redirect, jsonify
 import threading
 import time
+import rbp_camera as camera
 from ultralytics import YOLO
-from flask import Flask, request, render_template, redirect, jsonify
 
 app = Flask(__name__)
 model = YOLO('/home/rohan/Desktop/zenith2024/models/Final.pt')
@@ -46,29 +47,20 @@ def get_items():
     return jsonify(current_bill)
 
 def update_bills(time_interval):
-    from rbp_camera import capture_frame, start_camera, stop_camera
+    camera.start_camera()
     global current_bill
-    print("starting camera...")
-    start_camera()
-    print("starting camera done")
     while True:
-        print("inside inf loop")
-        print("before time sleep", time_interval)
-        time.sleep(time_interval)
-        print("after time sleep", time_interval)
-        print('capturing frame...')
-        img_path = capture_frame()
+        img_path = camera.capture_frame()
         print(img_path)
-        print('captured frame...')
-        print('before predict...')
         results = model.predict(img_path)
-        print('after predict...')
+
         result = results[0]
         names = result.names
-        
+			
         for i in range(len(result.boxes)):
             box = result.boxes[i]
             print('Object: ', names[box.cls[0].item()])
+        
             current_bill = jsonify(names[box.cls[0].item()])
         
 if __name__ == "__main__":  
