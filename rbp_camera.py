@@ -11,10 +11,11 @@ picam.configure(config)
 
 #picam.capture_file("ifsk.jpg")
 
-def capture_frame(path="/home/rohan/Desktop/zenith24/captures/", fname="capture.jpg"):
+def capture_frame(path="/home/rohan/Desktop/zenith2024/captures/", fname="capture.jpg"):
         filename = os.path.join(path, fname)
         picam.capture_file(filename)
         return filename
+
 def start_camera():
         picam.start()
 
