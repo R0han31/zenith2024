@@ -37,6 +37,10 @@ def capture_frame(path="/home/rohan/Desktop/zenith2024/captures/", fname="captur
         return filename
 
 def start_camera():
+        try:
+                picam.close()
+        except Exception as e:
+                print(e)
         picam.start()
 
 def stop_camera():
