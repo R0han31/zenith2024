@@ -61,7 +61,7 @@ def update_bills(time_interval):
             box = result.boxes[i]
             print('Object: ', names[box.cls[0].item()])
         
-            current_bill = jsonify(names[box.cls[0].item()])
+            current_bill = {1: names[box.cls[0].item()]}
         
 if __name__ == "__main__":  
     app.run(debug=True)
