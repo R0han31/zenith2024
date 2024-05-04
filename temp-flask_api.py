@@ -23,6 +23,7 @@ item_price_map = {
     "Fiama Sandalwood Gel Bar": 40,
     "Galaxy Buds Pro": 16000,
     "Head & Shoulders": 82,
+    "Head - Shoulders": 82,
     "Kitkat": 25,
     "Tata Coffee": 55,
     "Yippee Noodles": 14,
