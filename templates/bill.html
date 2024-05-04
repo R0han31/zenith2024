@@ -11,6 +11,21 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
+    <style>
+        #totalPrice {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 32px; /* Larger font size */
+            font-weight: bold;
+            color: #333; /* Darker color */
+            background-color: #fff; /* White background */
+            padding: 10px 20px; /* Add padding */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+    </style>
+
 <body class="bg-gray-100">
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold text-center mb-8">ABC Billing Systems</h1>
@@ -43,8 +58,12 @@
                 {% endfor %}
             </tbody>
         </table>
-        <button id="endBillingBtn" class="btn btn-primary w-full mt-8">End Billing</button>
+        <form method="post" action="{{ url_for("end_billing") }}" id="billing-form">
+            <input type="submit" id="endBillingBtn" class="btn btn-primary w-full mt-8" value="End Billing"></button>
+        </form>
     </div>
+
+    <div id="totalPrice">Total Price: ₹0</div>
 
     <!-- Delete Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -61,7 +80,7 @@
                             <input type="password" class="form-control" id="securityCode" required>
                         </div>
                         <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+                    </form> 
                 </div>
             </div>
         </div>
@@ -76,6 +95,7 @@
         function updateTable(data) {
             // Clear existing table content
             $('#billItems').empty();
+            var totalPrice = 0;
             
             // Populate table with new data
             $.each(data, function(itemName, details) {
@@ -86,7 +106,13 @@
                 row.append($('<td>').text(details[2]));
                 row.append($('<td>').html('<button class="btn btn-danger deleteBtn" data-id="' + itemName + '" data-toggle="modal" data-target="#deleteModal">Delete</button>'));
                 $('#billItems').append(row);
+                
+                // Calculate total price
+                totalPrice += parseFloat(details[2]);
             });
+
+            // Update total price display
+            $('#totalPrice').text('Total Price: ₹' + totalPrice.toFixed(2));
         }
     
         function get_items(){
@@ -168,9 +194,7 @@
     
         // Handle end billing button click
         document.getElementById('endBillingBtn').addEventListener('click', function() {
-            // Perform end billing actions
-            // You can add your logic here
-            console.log('End Billing button clicked');
+            document.getElementById("billing-form").submit();
         });
     </script>
     
