@@ -75,6 +75,24 @@ def update_bills(time_interval):
             else:
                 current_bill[object_name] = [item_price_map[object_name], 1, item_price_map[object_name]]
         
+@app.route("/delete_item", methods=["POST"])
+def delete_item():
+    item = request.form['item']
+    security_code = request.form['security_code']
+
+
+    if security_code != "1234":
+        return jsonify("Incorrect Code!")
+    
+    current_data = current_bill[item]
+
+    if current_data[1] == 1:
+        del current_bill[item]
+    else:
+        current_bill[item] = [current_data[0], current_data[1] - 1, (current_data[0] * (current_data[1] - 1))]
+    
+    return get_items()
+
 @app.route("/end_billing", methods=["POST"])
 def end_billing():
     t1.join()
