@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, jsonify
-import multiprocessing
+import threading
 import time
 # from ultralytics import YOLO
 # import rbp_camera as camera
@@ -13,6 +13,7 @@ app = Flask(__name__)
 user = {}
 
 t1 = None
+kill_thread = False
 
 item_price_map = {
     "B-Natural Mango": 10,
@@ -57,7 +58,7 @@ def home():
 @app.route("/billing", methods=["GET", "POST"])
 def billing():
     global t1
-    # t1 = multiprocessing.Process(target=update_bills, args=(10,))
+    # t1 = threading.Thread(target=update_bills, args=(10,))
     # t1.start()
     return render_template("bill.html", bill=current_bill, email=user.get("email"), phone=user.get("phone"))
 
@@ -89,6 +90,8 @@ def update_bills(time_interval):
     camera.start_camera()
     global current_bill
     while True:
+        if kill_thread:
+          break
         time.sleep(time_interval)
         img_path = camera.capture_frame()
         print(img_path)
@@ -110,8 +113,10 @@ def update_bills(time_interval):
 
 @app.route("/end_billing", methods=["POST"])
 def end_billing():
-    # t1.terminate()
-
+    # global kill_thread
+    # kill_thread = True
+    # t1.join()
+    # kill_thread = False
     email = user['email']
     phone = user['phone']
     invoice_id = random.randint(123456, 999999)
