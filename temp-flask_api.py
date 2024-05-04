@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, jsonify
-import threading
+import multiprocessing
 import time
 # from ultralytics import YOLO
 # import rbp_camera as camera
@@ -57,7 +57,7 @@ def home():
 @app.route("/billing", methods=["GET", "POST"])
 def billing():
     global t1
-    # t1 = threading.Thread(target=update_bills, args=(10,))
+    # t1 = multiprocessing.Process(target=update_bills, args=(10,))
     # t1.start()
     return render_template("bill.html", bill=current_bill, email=user.get("email"), phone=user.get("phone"))
 
@@ -110,7 +110,7 @@ def update_bills(time_interval):
 
 @app.route("/end_billing", methods=["POST"])
 def end_billing():
-    # t1.join()
+    # t1.terminate()
 
     email = user['email']
     phone = user['phone']
